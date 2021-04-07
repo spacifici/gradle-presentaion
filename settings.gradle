@@ -1,2 +1,3 @@
 include ':app'
+include ':libs'
 rootProject.name = "Internal University - Gradle"
