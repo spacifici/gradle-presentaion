@@ -1,7 +1,10 @@
-// [ ] Intro <-
-// [ ] The most important thing you need to know
+// [*] Intro
+// [ ] The most important thing you need to know <-
 // [ ] Tasks
 // [ ] DSL
 // [ ] Plugins
 
-// alias next='git rebase --continue'
+// ./gradlew -Dorg.gradle.debug=true --no-daemon --console plain :libs:tasks
+
+// !!! PUT A BREAK POINT ON THE NEXT LINE AND SHOW HOW TO DEBUG GRADLE SCRIPTS !!!
+println("Hello from project ${project.rootProject.name} (module ${project.name})!!!")
