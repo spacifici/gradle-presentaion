@@ -1,0 +1,3 @@
+[submodule "extern/fbjni"]
+	path = extern/fbjni
+	url = git@github.com:facebookincubator/fbjni.git
