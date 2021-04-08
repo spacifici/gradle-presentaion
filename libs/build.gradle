@@ -8,7 +8,16 @@
 // [*] DSL
 //      [*] DSL definition
 //      [*] DSL implementation
-// [ ] Plugins <-
+// [*] Plugins
+
+//   #####  #     # #######  #####  ####### ### ####### #     #  #####
+//  #     # #     # #       #     #    #     #  #     # ##    # #     #
+//  #     # #     # #       #          #     #  #     # # #   # #
+//  #     # #     # #####    #####     #     #  #     # #  #  #  #####
+//  #   # # #     # #             #    #     #  #     # #   # #       #
+//  #    #  #     # #       #     #    #     #  #     # #    ## #     #
+//   #### #  #####  #######  #####     #    ### ####### #     #  #####
+
 plugins {
     id "eyeo-cmake-plugin"
 }
@@ -18,5 +27,3 @@ cmake {
     src "../extern/fbjni"
     param "JAVA_HOME", System.getenv("JAVA_HOME")
 }
-
-// Where is all the rest?
