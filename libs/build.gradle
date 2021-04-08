@@ -5,89 +5,12 @@
 //      [*] Basic tasks
 //      [*] Working tasks
 //      [*] Debug/Release
-// [ ] DSL
+// [*] DSL
 //      [*] DSL definition
-//      [ ] DSL implementation <-
-// [ ] Plugins
-
-// As an example, we want to build a native external library using cmake and ninja
-// Remind to export JAVA_HOME:
-//      export JAVA_HOME="`which java | sed -r 's|(.*)((/.*?){2})$|\1|'`"
-
-import java.nio.file.Paths
-
-class CmakeConfig {
-    String name = null
-    String src = null
-    def params = [:]
-
-    def name(value) { name = value.toLowerCase() }
-    def src(value) { src = value }
-    def param(name, value) { params.put(name, value) }
-}
-
-// 1. In order to have cmake blocks available, we need to define a method
-def cmake(cl) {
-    // 2. all the names inside the closure will be resolved against the CmakeConfig instance
-    def config = new CmakeConfig()
-    cl.delegate = config
-    cl.call()
-
-    // 3. We may want to check that name and src are not null
-    if (    config.name == null ||
-            config.name.isEmpty() ||
-            config.src == null ||
-            config.src.isEmpty() ) {
-        throw new GradleException("Bad Config!")
-    }
-
-    // 4. Let's create the tasks, similarly to what we did before
-    final relativeSourceDir = Paths.get(config.src)
-    final absoluteSourceDir = project.projectDir.toPath().resolve(relativeSourceDir)
-
-    final buildTasks = [] // Let's collect all the build task names!
-
-    [ "Debug", "Release" ].each { mode ->
-        final configureTaskName = "configure${config.name.capitalize()}${mode}"
-        final buildTaskName = "build${config.name.capitalize()}${mode}"
-        buildTasks << buildTaskName
-        // Now the build path depends on the mode (later it may depends also on target arch)
-        final relativeBuildDir = Paths.get("build", "cmake", config.name, mode.toLowerCase())
-        final absoluteBuildDir = project.projectDir.toPath().resolve(relativeBuildDir)
-
-
-        def cmakeCmdLine = [ "cmake",
-                             "-G", "Ninja",
-                             "-DCMAKE_BUILD_TYPE=${mode}" ]
-        // Add the custom parameters
-        config.params.each {
-            cmakeCmdLine << "-D${it.key}=${it.value}"
-        }
-        cmakeCmdLine << absoluteSourceDir.toString()
-
-        task(configureTaskName, type: Exec) {
-            commandLine = cmakeCmdLine
-            workingDir = absoluteBuildDir.toString()
-            group = "configure"
-
-            doFirst {
-                absoluteBuildDir.toFile().mkdirs()
-            }
-        }
-
-        task(buildTaskName, type: Exec) {
-            commandLine = ["ninja"]
-            workingDir = absoluteBuildDir.toString()
-            group = "build"
-
-            dependsOn configureTaskName
-        }
-    }
-
-    task ("assemble${config.name.capitalize()}") {
-        group = "build"
-        dependsOn buildTasks
-    }
+//      [*] DSL implementation
+// [ ] Plugins <-
+plugins {
+    id "eyeo-cmake-plugin"
 }
 
 cmake {
@@ -95,3 +18,5 @@ cmake {
     src "../extern/fbjni"
     param "JAVA_HOME", System.getenv("JAVA_HOME")
 }
+
+// Where is all the rest?
